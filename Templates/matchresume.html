@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Matcher</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url('static/animation.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            /* center vertically */
+            justify-content: flex-end;
+            /* right horizontally */
+            padding-right: 80px;
+            /* add some spacing from the right edge */
+        }
+
+        .card {
+            padding: 20px;
+            background-color: white;
+            height: 720px;
+            width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 0 40px #0B6623;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* remove default container styling so flex works */
+        .container {
+            margin: 0;
+            padding: 0;
+            width: auto;
+        }
+
+        .card-header {
+            color: black;
+            border-radius: 10px 10px 0 0;
+            padding: 10px 20px;
+        }
+
+        .card-body {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-container {
+            flex: 0 0 auto;
+        }
+
+        .results-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            min-height: 0;
+        }
+
+        .results-box {
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        #resumes {
+            width: 250px;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: #0B6623;
+            border-color: #0B6623;
+        }
+
+        .btn-primary:hover {
+            background-color: #094d1b;
+            border-color: #094d1b;
+        }
+
+        .btn-primary:focus {
+            background-color: #0B6623;
+            border-color: #0B6623;
+            outline: none;
+            box-shadow: none;
+        }
+
+        .alert-info {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header text-center">
+                <h2>Job Description and Resume Matcher</h2>
+            </div>
+            <div class="card-body">
+                <div class="form-container">
+                    <form method="POST" action="/matcher" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="job_description">Job Description:</label>
+                            <textarea class="form-control" id="job_description" name="job_description" rows="5"
+                                required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="resumes">Upload Resumes:</label>
+                            <p>Please upload (atleast) 5 resumes</p>
+                            <input type="file" class="form-control" id="resumes" name="resumes" multiple required
+                                accept=".pdf, .docx, .txt">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Match Resumes</button>
+                    </form>
+                </div>
+                <div class="results-container">
+                    {% if message %}
+                    <div class="alert alert-info results-box">
+                        <p>{{ message }}</p>
+                        <ul>
+                            {% for index in range(top_resumes|length) %}
+                            <li>{{ top_resumes[index] }} (Similarity Score: {{ similarity_scores[index] }})</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
